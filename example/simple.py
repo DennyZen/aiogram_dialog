@@ -7,6 +7,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.filters import CommandStart, ExceptionTypeFilter
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.storage.redis import DefaultKeyBuilder, RedisStorage
+from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.types import CallbackQuery, ContentType, Message
 from redis.asyncio.client import Redis
 
@@ -151,11 +152,12 @@ async def main():
     logging.basicConfig(level=logging.INFO)
     bot = Bot(token=API_TOKEN)
 
-    storage = RedisStorage(
-        Redis(),
-        # in case of redis you need to configure key builder
-        key_builder=DefaultKeyBuilder(with_destiny=True),
-    )
+    storage = MemoryStorage()
+    # storage = RedisStorage(
+    #     Redis(),
+    #     # in case of redis you need to configure key builder
+    #     key_builder=DefaultKeyBuilder(with_destiny=True),
+    # )
     dp = Dispatcher(storage=storage)
     dp.message.register(start, CommandStart())
     dp.errors.register(
